@@ -5,11 +5,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PreAceleracion.Context;
+
 
 namespace PreAceleracion
 {
@@ -30,6 +33,12 @@ namespace PreAceleracion
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PreAceleracion", Version = "v1" });
+            });
+
+            services.AddEntityFrameworkSqlServer();
+            services.AddDbContext<BlogContext>((services, options)=> {
+                options.UseInternalServiceProvider(services);
+                options.UseSqlServer(Configuration.GetConnectionString("BlogConnectionString"));
             });
         }
 
